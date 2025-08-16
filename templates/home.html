@@ -1,0 +1,356 @@
+{% extends "base.html" %} {% block title %}PBS Open Data Portal - Home{%
+endblock %} {% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <!-- Animated Background Elements -->
+  <div class="animated-shapes">
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+    <div class="floating-shape"></div>
+  </div>
+
+  <!-- Animated Data Icons -->
+  <div class="data-icons">
+    <div class="data-icon">
+      <i class="fas fa-chart-bar"></i>
+    </div>
+    <div class="data-icon">
+      <i class="fas fa-database"></i>
+    </div>
+    <div class="data-icon">
+      <i class="fas fa-chart-line"></i>
+    </div>
+    <div class="data-icon">
+      <i class="fas fa-chart-pie"></i>
+    </div>
+    <div class="data-icon">
+      <i class="fas fa-chart-area"></i>
+    </div>
+  </div>
+
+  <!-- Animated Particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Animated Background Waves -->
+  <div class="wave-container">
+    <div class="wave"></div>
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <div class="container text-center">
+    <div class="hero-content">
+      <h1 class="display-3 fw-bold mb-4 text-white">PBS Open Data Portal</h1>
+      <p class="lead mb-5 text-white-50 fs-5">
+        Access official statistics, request custom data, and explore PBS
+        datasets through our comprehensive open data platform.
+      </p>
+      <div class="hero-buttons">
+        <a
+          href="{{ url_for('open_data') }}"
+          class="btn btn-light btn-lg me-3 px-4 py-3"
+        >
+          <i class="fas fa-database me-2"></i>Browse Datasets
+        </a>
+        <a
+          href="{{ url_for('request_data') }}"
+          class="btn btn-outline-light btn-lg px-4 py-3"
+        >
+          <i class="fas fa-chart-line me-2"></i>Request Custom Data
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Elements -->
+  <div class="floating-elements">
+    <div class="floating-card">
+      <i class="fas fa-chart-bar"></i>
+      <span>600+ Datasets</span>
+    </div>
+    <div class="floating-card">
+      <i class="fas fa-users"></i>
+      <span>50K+ Users</span>
+    </div>
+    <div class="floating-card">
+      <i class="fas fa-download"></i>
+      <span>24/7 Access</span>
+    </div>
+    <div class="floating-card">
+      <i class="fas fa-chart-line"></i>
+      <span>Real-time Data</span>
+    </div>
+    <div class="floating-card">
+      <i class="fas fa-shield-alt"></i>
+      <span>Secure Access</span>
+    </div>
+    <div class="floating-card">
+      <i class="fas fa-chart-pie"></i>
+      <span>Data Visualized</span>
+    </div>
+
+</section>
+
+<!-- Quick Stats Section -->
+<section class="quick-stats py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-database"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">600+</h3>
+            <p class="stat-label">Available Datasets</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-download"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">75K+</h3>
+            <p class="stat-label">Downloads</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">2.5K+</h3>
+            <p class="stat-label">Registered Users</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">24/7</h3>
+            <p class="stat-label">Data Access</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Portal Features Section -->
+<section class="features-section py-5">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="display-5 fw-bold text-teal mb-3">Portal Features</h2>
+      <p class="lead text-muted">
+        Comprehensive tools and services for data access and analysis
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h4>Comprehensive Data</h4>
+          <p>
+            Access to a wide range of government datasets covering economics,
+            demographics, healthcare, education, and more.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">Economics</span>
+            <span class="tag">Demographics</span>
+            <span class="tag">Healthcare</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h4>Advanced Search</h4>
+          <p>
+            Powerful search and filtering capabilities to quickly find the data
+            you need with intelligent categorization.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">Smart Search</span>
+            <span class="tag">Filters</span>
+            <span class="tag">Categories</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-download"></i>
+          </div>
+          <h4>Multiple Formats</h4>
+          <p>
+            Download data in various formats including CSV, Excel, PDF, and JSON
+            for your convenience and analysis.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">CSV</span>
+            <span class="tag">Excel</span>
+            <span class="tag">JSON</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h4>Regular Updates</h4>
+          <p>
+            All datasets are regularly updated to ensure you have access to the
+            most current and accurate information.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">Real-time</span>
+            <span class="tag">Updated</span>
+            <span class="tag">Accurate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <h4>Custom Requests</h4>
+          <p>
+            Request specific datasets or custom data combinations through our
+            streamlined and efficient process.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">Custom</span>
+            <span class="tag">Tailored</span>
+            <span class="tag">Efficient</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h4>User Dashboard</h4>
+          <p>
+            Track your downloads, manage requests, and access your personalized
+            data workspace with ease.
+          </p>
+          <div class="feature-tags">
+            <span class="tag">Dashboard</span>
+            <span class="tag">Tracking</span>
+            <span class="tag">Personal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Datasets Section -->
+{% if datasets %}
+<section class="datasets-section py-5 bg-light">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <h2 class="display-5 fw-bold text-teal mb-3">Recent Datasets</h2>
+      <p class="lead text-muted">
+        Explore our latest and most popular datasets
+      </p>
+    </div>
+
+    <div class="row g-4">
+      {% for dataset in datasets %}
+      <div class="col-lg-4 col-md-6">
+        <div class="dataset-card">
+          <div class="dataset-header">
+            <div class="dataset-icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="dataset-meta">
+              <span class="badge bg-primary">{{ dataset.category }}</span>
+              <small class="text-muted">{{ dataset.format }}</small>
+            </div>
+          </div>
+          <div class="dataset-body">
+            <h5 class="dataset-title">{{ dataset.name }}</h5>
+            <p class="dataset-description">{{ dataset.description }}</p>
+          </div>
+          <div class="dataset-footer">
+            <a
+              href="{{ url_for('open_data') }}"
+              class="btn btn-outline-primary btn-sm"
+            >
+              <i class="fas fa-eye me-1"></i>View Details
+            </a>
+            <a href="#" class="btn btn-primary btn-sm">
+              <i class="fas fa-download me-1"></i>Download
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="{{ url_for('open_data') }}" class="btn btn-primary btn-lg px-5">
+        <i class="fas fa-database me-2"></i>View All Datasets
+      </a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Call to Action Section -->
+<section class="cta-section py-5">
+  <div class="container">
+    <div class="cta-content text-center">
+      <h2 class="display-4 fw-bold text-white mb-4">Ready to Get Started?</h2>
+      <p class="lead text-white-50 mb-5">
+        Join thousands of researchers, analysts, and policymakers who trust PBS
+        data platform
+      </p>
+      <div class="cta-buttons">
+        <a
+          href="{{ url_for('register') }}"
+          class="btn btn-light btn-lg me-3 px-4 py-3"
+        >
+          <i class="fas fa-user-plus me-2"></i>Create Account
+        </a>
+        <a
+          href="{{ url_for('how_it_works') }}"
+          class="btn btn-outline-light btn-lg px-4 py-3"
+        >
+          <i class="fas fa-info-circle me-2"></i>Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

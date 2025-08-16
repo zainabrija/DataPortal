@@ -1,0 +1,376 @@
+{% extends "base.html" %} {% block title %}Open Data - PBS Data Portal{%
+endblock %} {% block content %}
+<div class="container py-5">
+  <h1 class="mb-4 fw-bold text-primary">Open Data</h1>
+  <p class="lead mb-5">
+    Browse and download official datasets from Pakistan Bureau of Statistics
+  </p>
+
+  <!-- Dataset Count Display -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="alert alert-info text-center">
+        <h4 class="mb-2">
+          <i class="fas fa-database me-2"></i>
+          <strong>600+ Datasets</strong> Available
+        </h4>
+        <p class="mb-0">
+          Comprehensive statistical data covering all sectors of Pakistan's
+          economy and society
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search datasets..."
+          id="searchInput"
+        />
+        <button
+          class="btn btn-primary"
+          type="button"
+          onclick="searchDatasets()"
+        >
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <select
+        class="form-select"
+        id="categoryFilter"
+        onchange="filterDatasets()"
+      >
+        <option value="">All Categories</option>
+        <option value="Demographics">Demographics</option>
+        <option value="Agriculture">Agriculture</option>
+        <option value="Labour">Labour</option>
+        <option value="Economics">Economics</option>
+        <option value="Education">Education</option>
+        <option value="Health">Health</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Datasets Grid -->
+  <div class="row g-4" id="datasetsGrid">
+    {% for dataset in datasets %}
+    <div
+      class="col-md-6 col-lg-4 dataset-item"
+      data-category="{{ dataset.category }}"
+      data-name="{{ dataset.name.lower() }}"
+    >
+      <div class="card h-100 shadow-sm hover-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title">{{ dataset.name }}</h5>
+            <span class="badge bg-primary">{{ dataset.category }}</span>
+          </div>
+          <p class="card-text text-truncate">{{ dataset.description }}</p>
+
+          <!-- Enhanced Dataset Information -->
+          <div class="mb-3">
+            <div class="row">
+              <div class="col-6">
+                <small class="text-muted">
+                  <i class="fas fa-calendar me-1"></i>
+                  Updated: {{ dataset.created_at.strftime('%B') if
+                  dataset.created_at else 'Recent' }}
+                </small>
+              </div>
+              <div class="col-6">
+                <small class="text-muted">
+                  <i class="fas fa-file me-1"></i>
+                  Size: {{ '2.5 MB' if dataset.format == 'Excel' else '1.2 MB'
+                  if dataset.format == 'CSV' else '3.8 MB' if dataset.format ==
+                  'PDF' else '1.5 MB' }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              <i class="fas fa-download me-1"></i>
+              {{ dataset.download_count }} downloads
+            </small>
+            <small class="text-muted">
+              <i
+                class="fas fa-file-{{ 'excel' if dataset.format == 'Excel' else 'csv' if dataset.format == 'CSV' else 'pdf' if dataset.format == 'PDF' else 'code' if dataset.format == 'JSON' else 'archive' }} me-1"
+              ></i>
+              {{ dataset.format }}
+            </small>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <div class="d-flex justify-content-center align-items-center gap-3">
+            <button
+              class="btn btn-outline-primary btn-sm view-dataset-btn"
+              data-dataset-id="{{ dataset.id }}"
+            >
+              <i class="fas fa-eye me-1"></i> View
+            </button>
+            <button
+              class="btn btn-success btn-sm download-dataset-btn"
+              data-dataset-id="{{ dataset.id }}"
+            >
+              <i class="fas fa-download me-1"></i> Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if not datasets %}
+  <div class="text-center py-5">
+    <h4 class="text-muted">No datasets available</h4>
+    <p class="text-muted">Check back later for new datasets.</p>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Dataset View Modal -->
+<div class="modal fade" id="datasetModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datasetModalTitle">Dataset Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body" id="datasetModalBody">
+        <!-- Content will be loaded dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-success" id="downloadModalBtn">
+          <i class="fas fa-download me-1"></i> Download Dataset
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hover-card {
+    transition: all 0.3s ease;
+  }
+
+  .hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .badge {
+    font-size: 0.7rem;
+  }
+</style>
+
+<script>
+  function searchDatasets() {
+    const searchTerm = document
+      .getElementById("searchInput")
+      .value.toLowerCase();
+    const datasets = document.querySelectorAll(".dataset-item");
+
+    datasets.forEach((dataset) => {
+      const name = dataset.dataset.name;
+      if (name.includes(searchTerm)) {
+        dataset.style.display = "block";
+      } else {
+        dataset.style.display = "none";
+      }
+    });
+  }
+
+  function filterDatasets() {
+    const category = document.getElementById("categoryFilter").value;
+    const datasets = document.querySelectorAll(".dataset-item");
+
+    datasets.forEach((dataset) => {
+      const datasetCategory = dataset.dataset.category;
+      if (!category || datasetCategory === category) {
+        dataset.style.display = "block";
+      } else {
+        dataset.style.display = "none";
+      }
+    });
+  }
+
+  function viewDataset(datasetId) {
+    // Get dataset information from the database via API
+    fetch(`/api/datasets/${datasetId}`)
+      .then((response) => response.json())
+      .then((dataset) => {
+        if (dataset) {
+          displayDatasetModal(dataset);
+        } else {
+          // Fallback for datasets not in API
+          displayFallbackModal(datasetId);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching dataset:", error);
+        displayFallbackModal(datasetId);
+      });
+  }
+
+  function displayDatasetModal(dataset) {
+    document.getElementById("datasetModalTitle").textContent = dataset.name;
+
+    let filesHtml = "";
+    if (dataset.files && dataset.files.length > 0) {
+      filesHtml = `
+        <div class="row mt-3">
+          <div class="col-12">
+            <h6><i class="fas fa-file me-2"></i>Available Files</h6>
+            <div class="list-group">
+              ${dataset.files
+                .map(
+                  (file) => `
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <i class="${file.icon} me-2"></i>
+                    ${file.name}
+                  </div>
+                  <div>
+                    <button class="btn btn-sm btn-outline-primary me-2">Download</button>
+                    <button class="btn btn-sm btn-outline-secondary">Preview</button>
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    let metadataHtml = "";
+    if (dataset.metadata && Object.keys(dataset.metadata).length > 0) {
+      metadataHtml = `
+        <div class="row mt-3">
+          <div class="col-12">
+            <h6><i class="fas fa-info-circle me-2"></i>Additional Information</h6>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <tbody>
+                  ${Object.entries(dataset.metadata)
+                    .map(
+                      ([key, value]) => `
+                    <tr>
+                      <td><strong>${key}:</strong></td>
+                      <td>${
+                        key === "Source"
+                          ? `<a href="${value}" target="_blank">${value}</a>`
+                          : value
+                      }</td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById("datasetModalBody").innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-database me-2"></i>Dataset Information</h6>
+                <p><strong>Name:</strong> ${dataset.name}</p>
+                <p><strong>Category:</strong> ${dataset.category}</p>
+                <p><strong>Format:</strong> ${dataset.format}</p>
+                <p><strong>Downloads:</strong> ${dataset.download_count.toLocaleString()}</p>
+            </div>
+            <div class="col-md-6">
+                <h6><i class="fas fa-align-left me-2"></i>Description</h6>
+                <p>${dataset.description}</p>
+            </div>
+        </div>
+        ${filesHtml}
+        ${metadataHtml}
+    `;
+
+    document.getElementById("downloadModalBtn").onclick = () =>
+      downloadDataset(dataset.id);
+    const modal = new bootstrap.Modal(document.getElementById("datasetModal"));
+    modal.show();
+  }
+
+  function displayFallbackModal(datasetId) {
+    // Fallback for datasets not in API - use basic info
+    const dataset = {
+      name: "Dataset " + datasetId,
+      description: "Dataset information not available",
+      category: "Unknown",
+      format: "Unknown",
+      download_count: 0,
+      files: [],
+      metadata: {},
+    };
+    displayDatasetModal(dataset);
+  }
+
+  function downloadDataset(datasetId) {
+    // Here you would implement the actual download functionality
+    alert(
+      "Download functionality would be implemented here for dataset ID: " +
+        datasetId
+    );
+
+    // Close modal if it's open
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById("datasetModal")
+    );
+    if (modal) {
+      modal.hide();
+    }
+  }
+
+  // Search on Enter key
+  document
+    .getElementById("searchInput")
+    .addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        searchDatasets();
+      }
+    });
+
+  // Add event listeners for view and download buttons
+  document.addEventListener("DOMContentLoaded", function () {
+    // View button event listeners
+    document.querySelectorAll(".view-dataset-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const datasetId = this.getAttribute("data-dataset-id");
+        viewDataset(parseInt(datasetId));
+      });
+    });
+
+    // Download button event listeners
+    document.querySelectorAll(".download-dataset-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const datasetId = this.getAttribute("data-dataset-id");
+        downloadDataset(parseInt(datasetId));
+      });
+    });
+  });
+</script>
+{% endblock %}
