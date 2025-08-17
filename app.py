@@ -87,6 +87,91 @@ class Feedback(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+def init_database():
+    """Initialize database tables and sample data"""
+    with app.app_context():
+        db.create_all()
+        
+        # Create admin user if not exists
+        admin = User.query.filter_by(email='admin@pbs.gov.pk').first()
+        if not admin:
+            admin = User(
+                name='Admin User',
+                email='admin@pbs.gov.pk',
+                password_hash=generate_password_hash('admin123'),
+                cnic='12345-1234567-1',
+                phone='+92XXXXXXXXX',
+                whatsapp='+92XXXXXXXXX',
+                department='IT Department',
+                city='Islamabad',
+                district='Islamabad',
+                province='Federal',
+                nationality='Pakistani',
+                is_admin=True
+            )
+            db.session.add(admin)
+            db.session.commit()
+        
+        # Add sample datasets
+        existing_count = Dataset.query.count()
+        if existing_count < 30:  # Only add if we have less than 30 datasets
+            sample_datasets = [
+                Dataset(
+                    name='PSLM / HIES 2018-19 (Provincial Level Survey)', 
+                    description='Pakistan Social and Living Standards Measurements (PSLM), 2018-19 is the eleventh round of a series of surveys, initiated in 2004. Current round of PSLM (Social & Household Integrated Economic Survey (HIES)) at provincial level survey covered 24809 households and provide detailed outcome indicators on Education, Health, Population Welfare, Housing, Water Sanitation & Hygiene, Information Communication & Technology (ICT), Food Insecurity Experience Scale (FIES) and Income & Expenditure.', 
+                    category='Demographics', 
+                    format='Multiple',
+                    download_count=random.randint(5000, 25000)
+                ),
+                Dataset(
+                    name='Basic Health Indicators, Pakistan and Other Countries of Region', 
+                    description='Basic Health Indicators, Pakistan and Other Countries of Region', 
+                    category='Health', 
+                    format='Excel',
+                    download_count=random.randint(3000, 15000)
+                ),
+                Dataset(name='Population Census', description='Complete population data from census', category='Demographics', format='CSV', download_count=random.randint(8000, 30000)),
+                Dataset(name='Agriculture Survey', description='Agricultural production and land use data', category='Agriculture', format='Excel', download_count=random.randint(2000, 12000)),
+                Dataset(name='Labour Force Survey', description='Employment and unemployment statistics', category='Labour', format='PDF', download_count=random.randint(4000, 18000)),
+                Dataset(name='Economic Indicators', description='GDP, inflation, and economic growth data', category='Economics', format='JSON', download_count=random.randint(6000, 22000)),
+                Dataset(name='Education Statistics', description='School enrollment and literacy rates', category='Education', format='CSV', download_count=random.randint(3000, 15000)),
+                Dataset(name='Health Statistics', description='Healthcare facilities and disease statistics', category='Health', format='Excel', download_count=random.randint(2500, 12000)),
+                # Additional datasets for realistic count
+                Dataset(name='Industrial Production Index', description='Monthly industrial production data', category='Economics', format='Excel', download_count=random.randint(1500, 8000)),
+                Dataset(name='Consumer Price Index', description='Monthly inflation and price data', category='Economics', format='CSV', download_count=random.randint(5000, 20000)),
+                Dataset(name='Foreign Trade Statistics', description='Import and export data', category='Economics', format='Excel', download_count=random.randint(2000, 10000)),
+                Dataset(name='Transport Statistics', description='Transportation and infrastructure data', category='Economics', format='PDF', download_count=random.randint(1000, 6000)),
+                Dataset(name='Energy Statistics', description='Energy production and consumption data', category='Economics', format='Excel', download_count=random.randint(1500, 9000)),
+                Dataset(name='Tourism Statistics', description='Tourism and travel data', category='Economics', format='CSV', download_count=random.randint(800, 5000)),
+                Dataset(name='Housing Census', description='Housing and construction data', category='Demographics', format='PDF', download_count=random.randint(3000, 14000)),
+                Dataset(name='Vital Statistics', description='Birth, death, and marriage data', category='Demographics', format='Excel', download_count=random.randint(2000, 10000)),
+                Dataset(name='Migration Statistics', description='Internal and external migration data', category='Demographics', format='CSV', download_count=random.randint(1500, 8000)),
+                Dataset(name='Urban Development Statistics', description='Urban planning and development data', category='Demographics', format='Excel', download_count=random.randint(1000, 6000)),
+                Dataset(name='Rural Development Statistics', description='Rural development and agriculture data', category='Agriculture', format='PDF', download_count=random.randint(1200, 7000)),
+                Dataset(name='Crop Production Statistics', description='Agricultural crop production data', category='Agriculture', format='Excel', download_count=random.randint(3000, 15000)),
+                Dataset(name='Livestock Statistics', description='Livestock and animal husbandry data', category='Agriculture', format='CSV', download_count=random.randint(2000, 10000)),
+                Dataset(name='Fisheries Statistics', description='Fisheries and aquaculture data', category='Agriculture', format='Excel', download_count=random.randint(800, 5000)),
+                Dataset(name='Forestry Statistics', description='Forestry and natural resources data', category='Agriculture', format='PDF', download_count=random.randint(600, 4000)),
+                Dataset(name='Employment Statistics', description='Employment and job market data', category='Labour', format='Excel', download_count=random.randint(4000, 18000)),
+                Dataset(name='Wage Statistics', description='Wage and salary data', category='Labour', format='CSV', download_count=random.randint(2500, 12000)),
+                Dataset(name='Occupational Statistics', description='Occupational and skill data', category='Labour', format='PDF', download_count=random.randint(1500, 8000)),
+                Dataset(name='Workplace Statistics', description='Workplace safety and conditions data', category='Labour', format='Excel', download_count=random.randint(1000, 6000)),
+                Dataset(name='Primary Education Statistics', description='Primary school enrollment and performance data', category='Education', format='CSV', download_count=random.randint(3000, 15000)),
+                Dataset(name='Secondary Education Statistics', description='Secondary school enrollment and performance data', category='Education', format='Excel', download_count=random.randint(2500, 12000)),
+                Dataset(name='Higher Education Statistics', description='University and college enrollment data', category='Education', format='PDF', download_count=random.randint(2000, 10000)),
+                Dataset(name='Literacy Statistics', description='Literacy rates and educational attainment data', category='Education', format='Excel', download_count=random.randint(1500, 8000)),
+                Dataset(name='Hospital Statistics', description='Hospital and healthcare facility data', category='Health', format='CSV', download_count=random.randint(2000, 10000)),
+                Dataset(name='Disease Statistics', description='Disease prevalence and health indicators data', category='Health', format='Excel', download_count=random.randint(3000, 15000)),
+                Dataset(name='Pharmaceutical Statistics', description='Pharmaceutical and medicine data', category='Health', format='PDF', download_count=random.randint(1500, 8000)),
+                Dataset(name='Mental Health Statistics', description='Mental health and psychological data', category='Health', format='Excel', download_count=random.randint(1000, 6000))
+            ]
+            for dataset in sample_datasets:
+                db.session.add(dataset)
+            db.session.commit()
+
+# Initialize database when app starts
+init_database()
+
 # Routes
 @app.route('/health')
 def health_check():
@@ -332,84 +417,4 @@ def get_file_icon(format_type):
     return icon_map.get(format_type, 'file')
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        
-        # Create admin user if not exists
-        admin = User.query.filter_by(email='admin@pbs.gov.pk').first()
-        if not admin:
-            admin = User(
-                name='Admin User',
-                email='admin@pbs.gov.pk',
-                password_hash=generate_password_hash('admin123'),
-                cnic='12345-1234567-1',
-                phone='+92XXXXXXXXX',
-                whatsapp='+92XXXXXXXXX',
-                department='IT Department',
-                city='Islamabad',
-                district='Islamabad',
-                province='Federal',
-                nationality='Pakistani',
-                is_admin=True
-            )
-            db.session.add(admin)
-            db.session.commit()
-        
-        # Add sample datasets
-        existing_count = Dataset.query.count()
-        if existing_count < 30:  # Only add if we have less than 30 datasets
-            sample_datasets = [
-                Dataset(
-                    name='PSLM / HIES 2018-19 (Provincial Level Survey)', 
-                    description='Pakistan Social and Living Standards Measurements (PSLM), 2018-19 is the eleventh round of a series of surveys, initiated in 2004. Current round of PSLM (Social & Household Integrated Economic Survey (HIES)) at provincial level survey covered 24809 households and provide detailed outcome indicators on Education, Health, Population Welfare, Housing, Water Sanitation & Hygiene, Information Communication & Technology (ICT), Food Insecurity Experience Scale (FIES) and Income & Expenditure.', 
-                    category='Demographics', 
-                    format='Multiple',
-                    download_count=random.randint(5000, 25000)
-                ),
-                Dataset(
-                    name='Basic Health Indicators, Pakistan and Other Countries of Region', 
-                    description='Basic Health Indicators, Pakistan and Other Countries of Region', 
-                    category='Health', 
-                    format='Excel',
-                    download_count=random.randint(3000, 15000)
-                ),
-                Dataset(name='Population Census', description='Complete population data from census', category='Demographics', format='CSV', download_count=random.randint(8000, 30000)),
-                Dataset(name='Agriculture Survey', description='Agricultural production and land use data', category='Agriculture', format='Excel', download_count=random.randint(2000, 12000)),
-                Dataset(name='Labour Force Survey', description='Employment and unemployment statistics', category='Labour', format='PDF', download_count=random.randint(4000, 18000)),
-                Dataset(name='Economic Indicators', description='GDP, inflation, and economic growth data', category='Economics', format='JSON', download_count=random.randint(6000, 22000)),
-                Dataset(name='Education Statistics', description='School enrollment and literacy rates', category='Education', format='CSV', download_count=random.randint(3000, 15000)),
-                Dataset(name='Health Statistics', description='Healthcare facilities and disease statistics', category='Health', format='Excel', download_count=random.randint(2500, 12000)),
-                # Additional datasets for realistic count
-                Dataset(name='Industrial Production Index', description='Monthly industrial production data', category='Economics', format='Excel', download_count=random.randint(1500, 8000)),
-                Dataset(name='Consumer Price Index', description='Monthly inflation and price data', category='Economics', format='CSV', download_count=random.randint(5000, 20000)),
-                Dataset(name='Foreign Trade Statistics', description='Import and export data', category='Economics', format='Excel', download_count=random.randint(2000, 10000)),
-                Dataset(name='Transport Statistics', description='Transportation and infrastructure data', category='Economics', format='PDF', download_count=random.randint(1000, 6000)),
-                Dataset(name='Energy Statistics', description='Energy production and consumption data', category='Economics', format='Excel', download_count=random.randint(1500, 9000)),
-                Dataset(name='Tourism Statistics', description='Tourism and travel data', category='Economics', format='CSV', download_count=random.randint(800, 5000)),
-                Dataset(name='Housing Census', description='Housing and construction data', category='Demographics', format='PDF', download_count=random.randint(3000, 14000)),
-                Dataset(name='Vital Statistics', description='Birth, death, and marriage data', category='Demographics', format='Excel', download_count=random.randint(2000, 10000)),
-                Dataset(name='Migration Statistics', description='Internal and external migration data', category='Demographics', format='CSV', download_count=random.randint(1500, 8000)),
-                Dataset(name='Urban Development Statistics', description='Urban planning and development data', category='Demographics', format='Excel', download_count=random.randint(1000, 6000)),
-                Dataset(name='Rural Development Statistics', description='Rural development and agriculture data', category='Agriculture', format='PDF', download_count=random.randint(1200, 7000)),
-                Dataset(name='Crop Production Statistics', description='Agricultural crop production data', category='Agriculture', format='Excel', download_count=random.randint(3000, 15000)),
-                Dataset(name='Livestock Statistics', description='Livestock and animal husbandry data', category='Agriculture', format='CSV', download_count=random.randint(2000, 10000)),
-                Dataset(name='Fisheries Statistics', description='Fisheries and aquaculture data', category='Agriculture', format='Excel', download_count=random.randint(800, 5000)),
-                Dataset(name='Forestry Statistics', description='Forestry and natural resources data', category='Agriculture', format='PDF', download_count=random.randint(600, 4000)),
-                Dataset(name='Employment Statistics', description='Employment and job market data', category='Labour', format='Excel', download_count=random.randint(4000, 18000)),
-                Dataset(name='Wage Statistics', description='Wage and salary data', category='Labour', format='CSV', download_count=random.randint(2500, 12000)),
-                Dataset(name='Occupational Statistics', description='Occupational and skill data', category='Labour', format='PDF', download_count=random.randint(1500, 8000)),
-                Dataset(name='Workplace Statistics', description='Workplace safety and conditions data', category='Labour', format='Excel', download_count=random.randint(1000, 6000)),
-                Dataset(name='Primary Education Statistics', description='Primary school enrollment and performance data', category='Education', format='CSV', download_count=random.randint(3000, 15000)),
-                Dataset(name='Secondary Education Statistics', description='Secondary school enrollment and performance data', category='Education', format='Excel', download_count=random.randint(2500, 12000)),
-                Dataset(name='Higher Education Statistics', description='University and college enrollment data', category='Education', format='PDF', download_count=random.randint(2000, 10000)),
-                Dataset(name='Literacy Statistics', description='Literacy rates and educational attainment data', category='Education', format='Excel', download_count=random.randint(1500, 8000)),
-                Dataset(name='Hospital Statistics', description='Hospital and healthcare facility data', category='Health', format='CSV', download_count=random.randint(2000, 10000)),
-                Dataset(name='Disease Statistics', description='Disease prevalence and health indicators data', category='Health', format='Excel', download_count=random.randint(3000, 15000)),
-                Dataset(name='Pharmaceutical Statistics', description='Pharmaceutical and medicine data', category='Health', format='PDF', download_count=random.randint(1500, 8000)),
-                Dataset(name='Mental Health Statistics', description='Mental health and psychological data', category='Health', format='Excel', download_count=random.randint(1000, 6000))
-            ]
-            for dataset in sample_datasets:
-                db.session.add(dataset)
-            db.session.commit()
-    
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000))) 
